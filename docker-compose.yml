@@ -1,0 +1,22 @@
+version: '3'
+services:
+    zookeeper:
+        image: zookeeper
+
+    solr-1:
+        image: solr:alpine
+        command: ["-c", "-z", "zookeeper", "-h", "solr-1"]
+        hostname: solr-1
+        depends_on:
+          - zookeeper
+
+    solr-2:
+        image: solr:alpine
+        command: ["-c", "-z", "zookeeper", "-h", "solr-2"]
+        hostname: solr-2
+        depends_on:
+          - zookeeper
+
+    tester:
+        build: tester
+
