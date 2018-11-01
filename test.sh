@@ -94,5 +94,15 @@ docker-compose run --rm tester bash -c "curl 'http://solr-2:8983/solr/test/selec
 
 echo "num should be [30]"
 
+echo "restart solr-1, forcing solr-2 to become leader"
+
+docker-compose restart solr-1
+
+docker-compose run --rm tester bash -c "while ! nc -z solr-1 8983; do sleep 1; done"
+
+
+# solr-1 now reverts to the old value
+docker-compose run --rm tester bash -c "curl 'http://solr-1:8983/solr/test/select?q=id:1&distrib=false'"
+
 docker-compose down -v --rmi all --remove-orphans
 
